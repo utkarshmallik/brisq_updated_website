@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brisq — AI Automation for Businesses</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #060608;
+    --surface: #0e0f14;
+    --card: #13141b;
+    --card-border: rgba(255,255,255,0.07);
+    --accent: #00e5a0;
+    --accent-dim: rgba(0,229,160,0.12);
+    --accent-glow: rgba(0,229,160,0.25);
+    --text-primary: #f0f0f4;
+    --text-secondary: #8a8b97;
+    --text-muted: #4a4b58;
+    --white: #ffffff;
+    --heading: 'Syne', sans-serif;
+    --body: 'DM Sans', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text-primary);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.1rem 5vw;
+    background: rgba(6,6,8,0.8);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .nav-logo {
+    font-family: var(--heading);
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--white);
+    text-decoration: none;
+  }
+
+  .nav-logo span { color: var(--accent); }
+
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+
+  .nav-links a {
+    font-size: 0.88rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--text-primary); }
+
+  .nav-cta {
+    background: var(--accent) !important;
+    color: #000 !important;
+    padding: 0.5rem 1.2rem !important;
+    border-radius: 6px !important;
+    font-weight: 500 !important;
+    font-size: 0.85rem !important;
+    letter-spacing: 0.01em !important;
+    transition: opacity 0.2s !important;
+  }
+
+  .nav-cta:hover { opacity: 0.85 !important; color: #000 !important; }
+
+  /* ─── HERO ─── */
+  #hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center;
+    padding: 8rem 5vw 6rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-grid-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 40%, transparent 100%);
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,229,160,0.08) 0%, transparent 70%);
+    top: 50%; left: 50%; transform: translate(-50%, -60%);
+    pointer-events: none; z-index: 0;
+  }
+
+  .hero-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-dim);
+    border: 1px solid rgba(0,229,160,0.2);
+    display: inline-block;
+    padding: 0.35rem 1rem;
+    border-radius: 100px;
+    margin-bottom: 1.8rem;
+    position: relative; z-index: 1;
+  }
+
+  .hero-title {
+    font-family: var(--heading);
+    font-size: clamp(2.8rem, 6vw, 5.2rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    color: var(--white);
+    max-width: 820px;
+    position: relative; z-index: 1;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-title em {
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    max-width: 540px;
+    line-height: 1.75;
+    position: relative; z-index: 1;
+    margin-bottom: 2.8rem;
+    font-weight: 300;
+  }
+
+  .hero-actions {
+    display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+    position: relative; z-index: 1;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #000;
+    font-family: var(--body);
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 0.85rem 2rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    transition: opacity 0.2s, transform 0.2s;
+    letter-spacing: 0.01em;
+  }
+
+  .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--text-primary);
+    font-family: var(--body);
+    font-size: 0.95rem;
+    font-weight: 400;
+    padding: 0.85rem 2rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.12);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .btn-outline:hover { border-color: rgba(255,255,255,0.28); background: rgba(255,255,255,0.04); }
+
+  .hero-stats {
+    display: flex; gap: 3rem; flex-wrap: wrap; justify-content: center;
+    margin-top: 4.5rem;
+    padding-top: 3rem;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    position: relative; z-index: 1;
+    width: 100%;
+    max-width: 640px;
+  }
+
+  .stat-item { text-align: center; }
+  .stat-num {
+    font-family: var(--heading);
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--white);
+    letter-spacing: -0.04em;
+    display: block;
+  }
+  .stat-num span { color: var(--accent); }
+  .stat-label { font-size: 0.8rem; color: var(--text-muted); letter-spacing: 0.05em; text-transform: uppercase; }
+
+  /* ─── SECTIONS ─── */
+  section { padding: 6rem 5vw; }
+
+  .section-eyebrow {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.8rem;
+    display: block;
+  }
+
+  .section-title {
+    font-family: var(--heading);
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: var(--white);
+    margin-bottom: 1rem;
+  }
+
+  .section-sub {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    max-width: 500px;
+    font-weight: 300;
+    line-height: 1.8;
+  }
+
+  .section-header { margin-bottom: 3.5rem; }
+
+  /* ─── SERVICES ─── */
+  #services { background: var(--surface); }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .service-card {
+    background: var(--surface);
+    padding: 2.2rem 2rem;
+    transition: background 0.25s;
+    position: relative;
+  }
+
+  .service-card:hover { background: var(--card); }
+
+  .service-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    background: var(--accent-dim);
+    border: 1px solid rgba(0,229,160,0.18);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 1.4rem;
+  }
+
+  .service-icon svg { width: 20px; height: 20px; stroke: var(--accent); fill: none; stroke-width: 1.8; }
+
+  .service-name {
+    font-family: var(--heading);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 0.65rem;
+    letter-spacing: -0.01em;
+  }
+
+  .service-desc {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    line-height: 1.75;
+    font-weight: 300;
+  }
+
+  .service-tag {
+    display: inline-block;
+    margin-top: 1.2rem;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-dim);
+    padding: 0.25rem 0.65rem;
+    border-radius: 4px;
+  }
+
+  /* ─── TESTIMONIALS ─── */
+  #testimonials { background: var(--black); }
+
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.2rem;
+  }
+
+  .testimonial-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    padding: 1.8rem;
+    transition: border-color 0.2s;
+  }
+
+  .testimonial-card:hover { border-color: rgba(0,229,160,0.15); }
+
+  .tcard-quote {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.8;
+    font-weight: 300;
+    margin-bottom: 1.4rem;
+    font-style: italic;
+  }
+
+  .tcard-quote::before { content: '\201C'; color: var(--accent); font-size: 1.4rem; line-height: 0; vertical-align: -0.3em; margin-right: 3px; }
+
+  .tcard-author {
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+
+  .tcard-avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: var(--accent-dim);
+    border: 1px solid rgba(0,229,160,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--heading);
+    font-weight: 700;
+    font-size: 0.75rem;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .tcard-name {
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--white);
+    line-height: 1.2;
+  }
+
+  .tcard-biz {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+  }
+
+  .stars { color: var(--accent); font-size: 0.8rem; margin-bottom: 1rem; letter-spacing: 2px; }
+
+  /* ─── CONTACT ─── */
+  #contact { background: var(--surface); }
+
+  .contact-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+
+  .contact-left .section-sub { max-width: 400px; }
+
+  .contact-perks { margin-top: 2rem; display: flex; flex-direction: column; gap: 1rem; }
+
+  .contact-perk {
+    display: flex; align-items: flex-start; gap: 0.85rem;
+  }
+
+  .perk-dot {
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--accent-dim);
+    border: 1px solid rgba(0,229,160,0.25);
+    flex-shrink: 0; margin-top: 2px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .perk-dot::after {
+    content: ''; width: 6px; height: 6px;
+    background: var(--accent); border-radius: 50%;
+  }
+
+  .perk-text { font-size: 0.88rem; color: var(--text-secondary); font-weight: 300; }
+
+  .contact-form {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 2.4rem;
+  }
+
+  .form-row { margin-bottom: 1.2rem; }
+
+  .form-label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-input, .form-select, .form-textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-family: var(--body);
+    font-size: 0.9rem;
+    padding: 0.75rem 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+    appearance: none;
+  }
+
+  .form-input::placeholder, .form-textarea::placeholder { color: var(--text-muted); }
+  .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: rgba(0,229,160,0.4); }
+  .form-textarea { resize: vertical; min-height: 100px; }
+
+  .form-submit {
+    width: 100%;
+    background: var(--accent);
+    color: #000;
+    font-family: var(--body);
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 0.9rem 2rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    letter-spacing: 0.02em;
+    transition: opacity 0.2s;
+  }
+
+  .form-submit:hover { opacity: 0.85; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--black);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 3rem 5vw;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem;
+  }
+
+  .footer-logo {
+    font-family: var(--heading);
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--white);
+    letter-spacing: -0.03em;
+  }
+
+  .footer-logo span { color: var(--accent); }
+
+  .footer-copy { font-size: 0.8rem; color: var(--text-muted); }
+
+  .footer-links { display: flex; gap: 2rem; }
+  .footer-links a { font-size: 0.82rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--text-secondary); }
+
+  /* ─── DIVIDER LINE ─── */
+  .divider {
+    height: 1px; background: rgba(255,255,255,0.05);
+    margin: 0 5vw;
+  }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-up { animation: fadeUp 0.7s cubic-bezier(0.22,1,0.36,1) forwards; }
+  .delay-1 { animation-delay: 0.1s; opacity: 0; }
+  .delay-2 { animation-delay: 0.22s; opacity: 0; }
+  .delay-3 { animation-delay: 0.34s; opacity: 0; }
+  .delay-4 { animation-delay: 0.46s; opacity: 0; }
+  .delay-5 { animation-delay: 0.58s; opacity: 0; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .contact-wrap { grid-template-columns: 1fr; gap: 2.5rem; }
+    .hero-stats { gap: 1.5rem; }
+    footer { flex-direction: column; align-items: flex-start; }
+    .footer-links { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="nav-logo">brisq<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#testimonials">Results</a></li>
+    <li><a href="https://wa.me/919341711258?text=Hi%20Brisq!%20I%27d%20like%20to%20get%20a%20free%20demo." class="nav-cta" target="_blank" rel="noopener">Get Started</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-glow"></div>
+
+  <div class="hero-eyebrow fade-up delay-1">AI Automation for Growing Businesses</div>
+
+  <h1 class="hero-title fade-up delay-2">
+    Automate Your Growth.<br><em>While You Sleep.</em>
+  </h1>
+
+  <p class="hero-sub fade-up delay-3">
+    Brisq builds AI-powered growth systems that capture leads, automate follow-ups, and retain customers — so your business runs around the clock without the overhead.
+  </p>
+
+  <div class="hero-actions fade-up delay-4">
+    <a href="https://wa.me/919341711258?text=Hi%20Brisq!%20I%27d%20like%20to%20get%20a%20free%20demo." class="btn-primary" target="_blank" rel="noopener">
+      Get a Free Demo
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    <a href="#services" class="btn-outline">See What We Build</a>
+  </div>
+
+  <div class="hero-stats fade-up delay-5">
+    <div class="stat-item">
+      <span class="stat-num">3<span>x</span></span>
+      <span class="stat-label">More leads captured</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">24<span>/7</span></span>
+      <span class="stat-label">Automated follow-ups</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">$<span>0</span></span>
+      <span class="stat-label">Extra staff needed</span>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-header">
+    <span class="section-eyebrow">What We Build</span>
+    <h2 class="section-title">Your Full AI Growth System</h2>
+    <p class="section-sub">Not just a chatbot. A complete automated growth engine that works across lead capture, follow-up, retention, and content — built for your business.</p>
+  </div>
+
+  <div class="services-grid">
+
+    <div class="service-card">
+      <div class="service-icon">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      <div class="service-name">Instant Lead Response</div>
+      <div class="service-desc">The moment someone reaches out — on any channel — they get a smart, personalised reply within seconds. No more leads going cold while you're busy.</div>
+      <span class="service-tag">Most Popular</span>
+    </div>
+
+    <div class="service-card">
+      <div class="service-icon">
+        <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+      </div>
+      <div class="service-name">Social DM Automation</div>
+      <div class="service-desc">Convert Instagram and Facebook DMs into booked appointments automatically. Every comment, reply, and enquiry handled — without you touching your phone.</div>
+      <span class="service-tag">High ROI</span>
+    </div>
+
+    <div class="service-card">
+      <div class="service-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <div class="service-name">24/7 Lead Capture Bot</div>
+      <div class="service-desc">Your website works while you sleep. Visitors get greeted, qualified, and funnelled straight into your pipeline — midnight or midday, no leads slip through.</div>
+      <span class="service-tag">Always On</span>
+    </div>
+
+    <div class="service-card">
+      <div class="service-icon">
+        <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </div>
+      <div class="service-name">AI Content Engine</div>
+      <div class="service-desc">Stop staring at a blank screen. Get a steady stream of on-brand social content — captions, scripts, and ad copy — generated and scheduled for you weekly.</div>
+      <span class="service-tag">Save 10+ hrs/week</span>
+    </div>
+
+    <div class="service-card">
+      <div class="service-icon">
+        <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      </div>
+      <div class="service-name">Lead Qualification</div>
+      <div class="service-desc">Not every enquiry is worth your time. Brisq automatically scores and filters leads based on your criteria — so you only spend energy on the ones that are ready to buy.</div>
+      <span class="service-tag">Work Smarter</span>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="section-header">
+    <span class="section-eyebrow">Real Results</span>
+    <h2 class="section-title">What Clients Are Saying</h2>
+    <p class="section-sub">Businesses that stopped leaving revenue on the table — here's what they have to say.</p>
+  </div>
+
+  <div class="testimonials-grid">
+
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="tcard-quote">The automation saved me from hiring extra staff. My clients get instant replies, appointment confirmations, even birthday offers — all on autopilot. My reviews have gone up too.</p>
+      <div class="tcard-author">
+        <div class="tcard-avatar">PS</div>
+        <div>
+          <div class="tcard-name">Priya Sharma</div>
+          <div class="tcard-biz">Founder, Glow Salon · Bangalore</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="tcard-quote">Our DMs were a mess — hundreds of messages, nobody following up. Brisq automated the whole pipeline. Leads get qualified and booked without us lifting a finger.</p>
+      <div class="tcard-author">
+        <div class="tcard-avatar">VR</div>
+        <div>
+          <div class="tcard-name">Vikram Rao</div>
+          <div class="tcard-biz">Broker, Horizon Realty · Mumbai</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="tcard-quote">Setup was fast, support is excellent, and the results speak for themselves. If you're a business owner still doing everything manually — you need Brisq yesterday.</p>
+      <div class="tcard-author">
+        <div class="tcard-avatar">DG</div>
+        <div>
+          <div class="tcard-name">Deepa Gupta</div>
+          <div class="tcard-biz">Owner, Spice Garden Restaurant · Delhi</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="tcard-quote">I was doubtful at first — worried it would feel robotic. But the flows Brisq built feel genuinely natural. We've seen a 35% jump in enquiry-to-booking conversion since going live.</p>
+      <div class="tcard-author">
+        <div class="tcard-avatar">JH</div>
+        <div>
+          <div class="tcard-name">James Hartford</div>
+          <div class="tcard-biz">Director, Hartford Fitness · London, UK</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-wrap">
+    <div class="contact-left">
+      <span class="section-eyebrow">Let's Talk</span>
+      <h2 class="section-title">Ready to Automate Your Growth?</h2>
+      <p class="section-sub">Book a free 30-minute call. We'll look at your business and show you exactly what an AI growth system would look like for you — no pressure, no fluff.</p>
+
+      <div class="contact-perks">
+        <div class="contact-perk">
+          <div class="perk-dot"></div>
+          <span class="perk-text">Free audit of your current lead & follow-up process</span>
+        </div>
+        <div class="contact-perk">
+          <div class="perk-dot"></div>
+          <span class="perk-text">Custom demo built for your specific business niche</span>
+        </div>
+        <div class="contact-perk">
+          <div class="perk-dot"></div>
+          <span class="perk-text">Transparent pricing — setup fee + simple monthly retainer</span>
+        </div>
+        <div class="contact-perk">
+          <div class="perk-dot"></div>
+          <span class="perk-text">Goes live in 7 days or less</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-form">
+      <div class="form-row">
+        <label class="form-label">Your Name</label>
+        <input type="text" id="f-name" class="form-input" placeholder="Your full name">
+      </div>
+      <div class="form-row">
+        <label class="form-label">Phone / WhatsApp</label>
+        <input type="tel" id="f-phone" class="form-input" placeholder="+1 234 567 8900">
+      </div>
+      <div class="form-row">
+        <label class="form-label">Business Type</label>
+        <select id="f-business" class="form-select">
+          <option value="" disabled selected>Select your business</option>
+          <option>Gym / Fitness Studio</option>
+          <option>Salon / Spa</option>
+          <option>Coaching / Education</option>
+          <option>Restaurant / Café</option>
+          <option>Real Estate</option>
+          <option>Clinic / Healthcare</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label class="form-label">Biggest Challenge</label>
+        <textarea id="f-challenge" class="form-textarea" placeholder="e.g. We lose leads after hours, or our follow-up is inconsistent..."></textarea>
+      </div>
+      <button class="form-submit" id="demo-btn">Book My Free Demo Call →</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">brisq<span>.</span></div>
+  <div class="footer-copy">© 2025 Brisq Automation. All rights reserved.</div>
+  <div class="footer-links">
+    <a href="#services">Services</a>
+    <a href="#testimonials">Results</a>
+    <a href="#contact">Contact</a>
+  </div>
+</footer>
+
+<script>
+  const selects = document.querySelectorAll('.form-select');
+  selects.forEach(sel => {
+    sel.style.color = sel.value === '' ? 'var(--text-muted)' : 'var(--text-primary)';
+    sel.addEventListener('change', function() {
+      this.style.color = 'var(--text-primary)';
+    });
+  });
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+        entry.target.style.transition = 'opacity 0.6s ease, transform 0.6s cubic-bezier(0.22,1,0.36,1)';
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.service-card, .testimonial-card').forEach((el, i) => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    observer.observe(el);
+  });
+
+  document.getElementById('demo-btn').addEventListener('click', function(e) {
+    e.preventDefault();
+    const nameEl     = document.getElementById('f-name');
+    const phoneEl    = document.getElementById('f-phone');
+    const businessEl = document.getElementById('f-business');
+    const challengeEl= document.getElementById('f-challenge');
+
+    const name     = nameEl.value.trim();
+    const phone    = phoneEl.value.trim();
+    const business = businessEl.value;
+    const challenge= challengeEl.value.trim();
+
+    let valid = true;
+    [nameEl, phoneEl, businessEl].forEach(el => {
+      if (!el.value.trim()) { el.style.borderColor = 'rgba(229,72,0,0.5)'; valid = false; }
+    });
+    if (!valid) return;
+
+    this.textContent = 'Taking you to the booking page...';
+    this.style.opacity = '0.7';
+    this.style.cursor = 'default';
+
+    const nameParts = name.split(' ');
+    const firstName = nameParts[0];
+    const lastName  = nameParts.slice(1).join(' ') || '';
+    const notes     = `Business: ${business}${challenge ? ' | Challenge: ' + challenge : ''}`;
+
+    const params = new URLSearchParams({
+      name: name,
+      firstName: firstName,
+      lastName: lastName,
+      notes: notes
+    });
+
+    setTimeout(() => {
+      window.open(`https://cal.com/utkarsh-mallik-hddnh5?${params.toString()}`, '_blank');
+      this.textContent = 'Book My Free Demo Call →';
+      this.style.opacity = '1';
+      this.style.cursor = 'pointer';
+    }, 500);
+  });
+
+  document.querySelectorAll('.form-input, .form-select, .form-textarea').forEach(el => {
+    el.addEventListener('input', function() { this.style.borderColor = ''; });
+    el.addEventListener('change', function() { this.style.borderColor = ''; });
+  });
+</script>
+
+</body>
+</html>
